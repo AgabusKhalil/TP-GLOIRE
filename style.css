@@ -1,0 +1,876 @@
+/* ============================= */
+/* 1. Variables de Couleurs & Effets */
+/* ============================= */
+:root {
+    --violet-principal: #6C63FF;
+    --violet-fonce: #534edd;
+    --orange-accent: #ffa726;
+    --gris-texte-fonce: #333333;
+    --gris-texte-moyen: #666666;
+    --blanc-pur: #FFFFFF;
+    --gris-bordure: #eeeeee;
+    --ombre-legere: rgba(0, 0, 0, 0.08);
+    --ombre-moyenne: rgba(0, 0, 0, 0.12);
+    --ombre-intense: rgba(0, 0, 0, 0.25);
+    --glow-violet: rgba(108, 99, 255, 0.6);
+    --glow-orange: rgba(255, 167, 38, 0.7);
+    --neon-violet: #8e85ff;
+    --neon-orange: #ffc107;
+}
+
+/* Keyframes pour les animations */
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 15px var(--glow-violet), 0 0 30px var(--glow-violet) inset;
+    }
+
+    50% {
+        box-shadow: 0 0 25px var(--glow-violet), 0 0 45px var(--glow-violet) inset;
+    }
+
+    100% {
+        box-shadow: 0 0 15px var(--glow-violet), 0 0 30px var(--glow-violet) inset;
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes cardHoverGlow {
+    0% {
+        box-shadow: 0 10px 30px var(--ombre-legere), 0 0 0px rgba(108, 99, 255, 0.0);
+    }
+
+    50% {
+        box-shadow: 0 15px 40px var(--ombre-moyenne), 0 0 20px rgba(108, 99, 255, 0.3);
+    }
+
+    100% {
+        box-shadow: 0 10px 30px var(--ombre-legere), 0 0 0px rgba(108, 99, 255, 0.0);
+    }
+}
+
+@keyframes subtleDots {
+    0% {
+        background-position: 0 0, 10px 10px;
+    }
+
+    100% {
+        background-position: 10px 10px, 0 0;
+    }
+}
+
+@keyframes projectCardRotate {
+    0% {
+        transform: translateY(-18px) scale(1.03) rotateY(0deg);
+        box-shadow: 0 30px 60px var(--ombre-intense), 0 0 45px var(--glow-orange), 0 0 80px var(--glow-orange);
+    }
+
+    50% {
+        transform: translateY(-18px) scale(1.03) rotateY(10deg);
+        box-shadow: 0 35px 70px var(--ombre-intense), 0 0 50px var(--glow-orange), 0 0 90px var(--glow-orange);
+    }
+
+    100% {
+        transform: translateY(-18px) scale(1.03) rotateY(0deg);
+        box-shadow: 0 30px 60px var(--ombre-intense), 0 0 45px var(--glow-orange), 0 0 80px var(--glow-orange);
+    }
+}
+
+/* ============================= */
+/* 2. Réinitialisation Globale   */
+/* ============================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--blanc-pur);
+    /* Garde le blanc pur en cas de problème avec l'image */
+    font-family: 'Roboto', sans-serif;
+    color: var(--gris-texte-fonce);
+    line-height: 1.7;
+    overflow-x: hidden;
+
+    /* AJOUT DU FOND EN IMAGE ICI */
+    background-image: url('../image/mon_fond_perso.jpg');
+    /* <<< TRÈS IMPORTANT : REMPLACEZ CECI PAR LE CHEMIN RÉEL DE VOTRE IMAGE >>> */
+    background-size: cover;
+    background-attachment: fixed;
+    /* L'image reste fixe lors du défilement */
+    background-position: center center;
+    background-repeat: no-repeat;
+    position: relative;
+    /* Nécessaire pour le pseudo-élément ::before */
+}
+
+/* Pseudo-élément pour la superposition (overlay) pour améliorer la lisibilité */
+body::before {
+    content: '';
+    position: fixed;
+    /* Fixed pour qu'il couvre toute la page même au défilement */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.6);
+    /* Fond blanc semi-transparent */
+    z-index: -1;
+    /* Place l'overlay derrière le contenu mais devant l'image */
+}
+
+/* ============================= */
+/* 3. En-tête (Header)           */
+/* ============================= */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 20px var(--ombre-moyenne);
+    padding: 1rem 4rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Nouveau style pour nav-buttons si vous l'ajoutez dans le header */
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* Espace entre les éléments */
+}
+
+.search-input {
+    padding: 8px 15px;
+    border: 1px solid var(--gris-bordure);
+    border-radius: 20px;
+    font-size: 0.9em;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--violet-principal);
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.3);
+}
+
+.btn-connexion {
+    text-decoration: none;
+    background-color: var(--orange-accent);
+    color: var(--blanc-pur);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-connexion:hover {
+    background-color: var(--neon-orange);
+    transform: translateY(-2px);
+}
+
+
+.header__logo {
+    text-decoration: none;
+    font-size: 2.8rem;
+    color: var(--violet-principal);
+    font-weight: 900;
+    letter-spacing: -2px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.header__logo:hover {
+    color: var(--violet-fonce);
+}
+
+.nav__list {
+    list-style: none;
+    display: flex;
+}
+
+.nav__item {
+    margin-left: 35px;
+}
+
+.nav__link {
+    text-decoration: none;
+    color: var(--gris-texte-fonce);
+    font-weight: 700;
+    font-size: 1.15em;
+    position: relative;
+    padding: 10px 0;
+    transition: color 0.3s ease;
+}
+
+.nav__link:hover {
+    color: var(--violet-fonce);
+}
+
+.nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0;
+    height: 3px;
+    background-color: var(--neon-violet);
+    box-shadow: 0 0 8px var(--neon-violet), 0 0 15px var(--neon-violet);
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nav__link:hover::after {
+    width: 100%;
+}
+
+.nav__link--active {
+    color: var(--violet-principal);
+}
+
+.nav__link--active::after {
+    width: 100%;
+    background-color: var(--orange-accent);
+    box-shadow: 0 0 8px var(--neon-orange), 0 0 15px var(--neon-orange);
+}
+
+/* ============================= */
+/* 4. Section Héro (Hero)        */
+/* ============================= */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10rem 2rem;
+    min-height: 90vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+    opacity: 0.5;
+    animation: rotateGlow 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotateGlow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hero__content {
+    max-width: 900px;
+    z-index: 1;
+}
+
+.hero__image-container {
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+.hero__image {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 10px solid var(--neon-violet);
+    box-shadow: 0 0 20px var(--glow-violet), 0 0 40px var(--glow-violet), 0 0 60px var(--glow-violet);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
+    animation: pulseGlow 3s infinite alternate;
+}
+
+.hero__image:hover {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 0 0 30px var(--glow-orange), 0 0 60px var(--glow-orange), 0 0 90px var(--glow-orange);
+}
+
+.hero__title {
+    font-size: 5.5rem;
+    margin-bottom: 1.8rem;
+    font-weight: 900;
+    color: var(--violet-fonce);
+    line-height: 1.05;
+    letter-spacing: -2.5px;
+}
+
+.hero__title span {
+    color: var(--orange-accent);
+}
+
+.hero__subtitle {
+    font-size: 1.6em;
+    color: var(--gris-texte-moyen);
+    margin-bottom: 2.5rem;
+    max-width: 800px;
+}
+
+.hero__button {
+    text-decoration: none;
+    display: inline-block;
+    background: linear-gradient(45deg, var(--violet-principal), var(--violet-fonce));
+    color: var(--blanc-pur);
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 15px var(--glow-violet);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero__button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.hero__button:hover::before {
+    left: 100%;
+}
+
+.hero__button:hover {
+    background: linear-gradient(45deg, var(--violet-fonce), #4a3ecc);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 25px var(--ombre-intense), 0 0 30px var(--glow-orange);
+}
+
+/* ============================= */
+/* 5. Sections Générales (H2)    */
+/* ============================= */
+.section-heading {
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--violet-principal);
+    text-align: center;
+    /* Ceci centre le texte À L'INTÉRIEUR du H2 */
+    margin-bottom: 4rem;
+    position: relative;
+    /* Ajustement pour s'assurer que le bloc H2 lui-même est centré */
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-heading::after {
+    content: '';
+    display: block;
+    width: 120px;
+    height: 6px;
+    background: linear-gradient(90deg, var(--orange-accent), var(--neon-orange));
+    margin: 1.5rem auto 0 auto;
+    /* Centre la barre décorative sous le titre */
+    border-radius: 3px;
+    box-shadow: 0 0 10px var(--neon-orange);
+}
+
+/* ============================= */
+/* 6. Section "À Propos"         */
+/* ============================= */
+.about-section {
+    max-width: 1000px;
+    margin: 8rem auto;
+    /* CETTE LIGNE CENTRE LA SECTION */
+    padding: 3rem;
+    background-color: var(--blanc-pur);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px var(--ombre-moyenne), 0 0 20px rgba(108, 99, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.about-section__paragraph {
+    line-height: 1.9;
+    font-size: 1.2em;
+    color: var(--gris-texte-moyen);
+    margin-bottom: 1.8rem;
+    text-align: justify;
+}
+
+/* ============================= */
+/* 7. Section "Compétences"       */
+/* ============================= */
+.skills-section {
+    margin: 8rem auto;
+    /* CETTE LIGNE CENTRE LA SECTION */
+    max-width: 1200px;
+    padding: 0 3rem;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+    margin-top: 4rem;
+}
+
+.skill-card {
+    background-color: var(--blanc-pur);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px var(--ombre-legere);
+    text-align: center;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+    border: 1px solid var(--gris-bordure);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08), 0 0 5px rgba(108, 99, 255, 0.05);
+}
+
+.skill-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(108, 99, 255, 0.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+    z-index: 0;
+}
+
+.skill-card:hover::before {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.skill-card:hover {
+    transform: translateY(-15px) rotate(1deg);
+    box-shadow: 0 25px 50px var(--ombre-moyenne), 0 0 35px var(--glow-violet), 0 0 60px var(--glow-violet);
+    border-color: var(--violet-principal);
+}
+
+.skill-card__icon {
+    font-size: 4.5rem;
+    color: var(--orange-accent);
+    margin-bottom: 20px;
+}
+
+.skill-card__title {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: var(--violet-fonce);
+    margin-bottom: 12px;
+}
+
+.skill-card__description {
+    font-size: 1em;
+    color: var(--gris-texte-moyen);
+    line-height: 1.6;
+}
+
+/* ============================= */
+/* 8. Section "Projets"           */
+/* ============================= */
+.projects-section {
+    margin: 8rem auto;
+    /* CETTE LIGNE CENTRE LA SECTION */
+    max-width: 1200px;
+    padding: 0 3rem;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    margin-top: 4rem;
+}
+
+.project-card {
+    background-color: var(--blanc-pur);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px var(--ombre-legere);
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+    border: 1px solid var(--gris-bordure);
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08), 0 0 5px rgba(255, 167, 38, 0.05);
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 167, 38, 0.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+    z-index: 0;
+}
+
+.project-card:hover::before {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.project-card:hover {
+    animation: projectCardRotate 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    border-color: var(--orange-accent);
+}
+
+.project-card__image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.project-card:hover .project-card__image {
+    transform: scale(1.08);
+}
+
+.project-card__content {
+    padding: 25px;
+}
+
+.project-card__title {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--violet-fonce);
+    margin-bottom: 10px;
+}
+
+.project-card__description {
+    font-size: 1em;
+    color: var(--gris-texte-moyen);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.project-card__tags {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: rgba(108, 99, 255, 0.1);
+    color: var(--violet-principal);
+    font-size: 0.85em;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tag:hover {
+    background-color: var(--violet-principal);
+    color: var(--blanc-pur);
+    box-shadow: 0 0 12px rgba(108, 99, 255, 0.6);
+}
+
+.project-card__link {
+    display: inline-block;
+    color: var(--violet-principal);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05em;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.project-card__link i {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.project-card__link:hover {
+    color: var(--orange-accent);
+    transform: translateX(8px);
+}
+
+.project-card__link:hover i {
+    transform: translateX(8px);
+}
+
+/* ============================= */
+/* 9. Section "Contact"           */
+/* ============================= */
+.contact-section {
+    margin: 8rem auto;
+    max-width: 800px;
+    padding: 3rem;
+    background-color: var(--blanc-pur);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px var(--ombre-moyenne);
+    text-align: center;
+}
+
+.contact-info p {
+    font-size: 1.2em;
+    color: var(--gris-texte-moyen);
+    margin-bottom: 15px;
+}
+
+.contact-info a {
+    color: var(--violet-principal);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: var(--orange-accent);
+}
+
+.contact-info i {
+    margin-right: 10px;
+    color: var(--orange-accent);
+}
+
+/* ============================= */
+/* 10. Pied de Page (Footer)      */
+/* ============================= */
+.footer {
+    background: linear-gradient(135deg, var(--violet-fonce), #4a3ecc);
+    color: var(--blanc-pur);
+    margin-top: 8rem;
+    padding: 4rem 0;
+    text-align: center;
+    box-shadow: 0 -8px 30px var(--ombre-intense);
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.08)"/></svg>');
+    background-size: 4px 4px;
+    opacity: 0.8;
+    z-index: 0;
+}
+
+.footer__text {
+    margin-bottom: 2rem;
+    font-size: 1.2em;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
+
+.footer__social-links a {
+    font-size: 2.5em;
+    color: var(--blanc-pur);
+    margin: 0 15px;
+    transition: all 0.3s ease-in-out;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
+
+.footer__social-links a:hover {
+    color: var(--neon-orange);
+    transform: translateY(-8px) scale(1.2) rotate(5deg);
+    text-shadow: 0 0 15px var(--neon-orange), 0 0 30px var(--neon-orange);
+}
+
+.footer__copyright {
+    margin-top: 2.5rem;
+    font-size: 0.95em;
+    color: rgba(255, 255, 255, 0.85);
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================= */
+/* 11. Médias Queries (Responsivité) */
+/* ============================= */
+@media (max-width: 992px) {
+    .header {
+        padding: 1rem 2rem;
+        flex-direction: column;
+    }
+
+    /* Ajustement pour header */
+    .header .nav-buttons {
+        margin-top: 1rem;
+    }
+
+    /* Espace pour les boutons */
+    .hero {
+        padding: 8rem 1.5rem;
+        min-height: 80vh;
+    }
+
+    .hero__title {
+        font-size: 4.5rem;
+    }
+
+    .nav__list {
+        margin-top: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Ajustement pour la navigation */
+    .nav__item {
+        margin: 5px 10px;
+    }
+
+    .about-section,
+    .skills-section,
+    .projects-section,
+    .contact-section {
+        margin: 6rem auto;
+        padding: 2rem;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+    }
+
+    .section-heading {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+    }
+
+    .nav__list {
+        margin-top: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .nav__item {
+        margin: 5px 10px;
+    }
+
+    .hero__title {
+        font-size: 3.5rem;
+    }
+
+    .hero__subtitle {
+        font-size: 1.4em;
+    }
+
+    .hero__image {
+        width: 250px;
+        height: 250px;
+    }
+
+    .section-heading {
+        font-size: 3rem;
+        margin-bottom: 3rem;
+    }
+
+    .about-section,
+    .skills-section,
+    .projects-section,
+    .contact-section {
+        padding: 1.5rem;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .header__logo {
+        font-size: 2.2rem;
+    }
+
+    .nav__link {
+        font-size: 0.95em;
+    }
+
+    .hero__title {
+        font-size: 2.8rem;
+    }
+
+    .hero__subtitle {
+        font-size: 1.1em;
+    }
+
+    .hero__button {
+        padding: 12px 28px;
+        font-size: 0.95em;
+    }
+
+    .section-heading {
+        font-size: 2.5rem;
+    }
+
+    .hero__image {
+        width: 180px;
+        height: 180px;
+    }
+
+    .footer__social-links a {
+        font-size: 2em;
+        margin: 0 10px;
+    }
+
+    .about-section__paragraph {
+        font-size: 1.1em;
+    }
+}
